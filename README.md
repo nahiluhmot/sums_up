@@ -1,7 +1,7 @@
 # SumsUp
 
 Sum types for Ruby.
-Inspired by [hogberg/sums-up](https://github.com/hojberg/sums-up).
+Inspired by [hojberg/sums-up](https://github.com/hojberg/sums-up).
 
 ## Installation
 
