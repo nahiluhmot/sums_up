@@ -25,3 +25,5 @@ module SumsUp
     def_delegators(Core, :define)
   end
 end
+
+require 'sums_up/maybe'
