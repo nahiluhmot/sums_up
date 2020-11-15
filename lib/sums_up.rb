@@ -11,4 +11,9 @@ module SumsUp
   UnmatchedVariantError = Class.new(MatchError)
   MatchAfterWildcardError = Class.new(MatchError)
   DuplicateMatchError = Class.new(MatchError)
+
+  ParserError = Class.new(Error)
+  VariantNameError = Class.new(ParserError)
+  VariantArgsError = Class.new(ParserError)
+  DuplicateNameError = Class.new(ParserError)
 end
