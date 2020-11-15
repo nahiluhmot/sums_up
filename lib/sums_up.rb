@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 require 'sums_up/core'
 require 'sums_up/version'
 
@@ -16,4 +18,10 @@ module SumsUp
   VariantNameError = Class.new(ParserError)
   VariantArgsError = Class.new(ParserError)
   DuplicateNameError = Class.new(ParserError)
+
+  class << self
+    extend Forwardable
+
+    def_delegators(Core, :define)
+  end
 end
