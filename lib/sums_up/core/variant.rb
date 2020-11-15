@@ -5,12 +5,13 @@ module SumsUp
     # Represents a variant of a sumtype. Use build_variant_class to generate
     # a new subclass for a given variant.
     class Variant
-      def self.build_variant_class(name, other_names, members)
+      def self.build_variant_class(name, other_names, members, matcher_class)
         Class.new(self).tap do |variant_class|
           variant_class.const_set(:VARIANT, name)
           variant_class.const_set(:MEMBERS, members)
 
           variant_class.const_set(:Accessors, accessors_module(members))
+          variant_class.const_set(:Matcher, matcher_class)
           variant_class.const_set(
             :Predicates,
             predicates_module(name, other_names)
@@ -65,6 +66,14 @@ module SumsUp
         idx = index_for_key(key)
 
         @values[idx] = val
+      end
+
+      def match
+        matcher = self.class::Matcher.new(self)
+
+        yield(matcher)
+
+        matcher._fetch_result
       end
 
       def members(dup: true)

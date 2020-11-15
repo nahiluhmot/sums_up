@@ -5,23 +5,30 @@ RSpec.describe SumsUp::Core::Variant do
     described_class.build_variant_class(
       :no_arg_variant,
       %i[one_arg_variant two_arg_variant],
-      []
+      [],
+      no_arg_matcher_class
     )
   end
   let(:one_arg_variant_class) do
     described_class.build_variant_class(
       :one_arg_variant,
       %i[no_arg_variant two_arg_variant],
-      %i[value]
+      %i[value],
+      one_arg_matcher_class
     )
   end
   let(:two_arg_variant_class) do
     described_class.build_variant_class(
       :two_arg_variant,
       %i[no_arg_variant one_arg_variant],
-      %i[first second]
+      %i[first second],
+      two_arg_matcher_class
     )
   end
+  let(:no_arg_matcher_class) { double(:no_arg_matcher_class) }
+  let(:one_arg_matcher_class) { double(:one_arg_matcher_class) }
+  let(:two_arg_matcher_class) { double(:two_arg_matcher_class) }
+
   let(:no_arg_variant_instance) { no_arg_variant_class.new }
   let(:one_arg_variant_instance) { one_arg_variant_class.new('test') }
   let(:two_arg_variant_instance) { two_arg_variant_class.new('left', 'right') }
@@ -333,6 +340,70 @@ RSpec.describe SumsUp::Core::Variant do
             .from('right')
             .to(42)
         )
+    end
+  end
+
+  describe '#match' do
+    let(:no_arg_matcher_instance) { double(:no_arg_matcher_instance) }
+    let(:one_arg_matcher_instance) { double(:one_arg_matcher_instance) }
+    let(:two_arg_matcher_instance) { double(:two_arg_matcher_instance) }
+
+    before do
+      allow(no_arg_matcher_class)
+        .to(receive(:new))
+        .with(no_arg_variant_instance)
+        .and_return(no_arg_matcher_instance)
+
+      allow(one_arg_matcher_class)
+        .to(receive(:new))
+        .with(one_arg_variant_instance)
+        .and_return(one_arg_matcher_instance)
+
+      allow(two_arg_matcher_class)
+        .to(receive(:new))
+        .with(two_arg_variant_instance)
+        .and_return(two_arg_matcher_instance)
+
+      allow(no_arg_matcher_instance)
+        .to(receive(:_fetch_result))
+        .with(no_args)
+        .and_return('no arg variant match result')
+
+      allow(one_arg_matcher_instance)
+        .to(receive(:_fetch_result))
+        .with(no_args)
+        .and_return('one arg variant match result')
+
+      allow(two_arg_matcher_instance)
+        .to(receive(:_fetch_result))
+        .with(no_args)
+        .and_return('two arg variant match result')
+    end
+
+    it 'creates a new matcher, yields it, then fetches the result' do
+      no_arg_result = no_arg_variant_instance.match do |matcher|
+        expect(matcher)
+          .to(eq(no_arg_matcher_instance))
+      end
+
+      one_arg_result = one_arg_variant_instance.match do |matcher|
+        expect(matcher)
+          .to(eq(one_arg_matcher_instance))
+      end
+
+      two_arg_result = two_arg_variant_instance.match do |matcher|
+        expect(matcher)
+          .to(eq(two_arg_matcher_instance))
+      end
+
+      expect(no_arg_result)
+        .to(eq('no arg variant match result'))
+
+      expect(one_arg_result)
+        .to(eq('one arg variant match result'))
+
+      expect(two_arg_result)
+        .to(eq('two arg variant match result'))
     end
   end
 
