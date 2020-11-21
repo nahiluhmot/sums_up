@@ -27,3 +27,4 @@ module SumsUp
 end
 
 require 'sums_up/maybe'
+require 'sums_up/result'
