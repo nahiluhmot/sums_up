@@ -10,15 +10,15 @@ RSpec.describe SumsUp do
     it 'builds a sum type given only no-arg variants' do
       color = subject.define(:red, :green, :blue) do
         def not_blue?
-          match do |m|
-            m.blue false
-            m._ true
-          end
+          match(blue: false, _: true)
         end
       end
 
       expect(color.red.to_s)
         .to((eq('#<variant red>')))
+
+      expect(color.red)
+        .to(be_not_blue)
 
       expect(color.green)
         .to(be_not_blue)
@@ -34,6 +34,15 @@ RSpec.describe SumsUp do
         rescue StandardError => e
           left(e)
         end
+
+        # Using define_method so that we can reference the local variable
+        # `either`.
+        define_method(:map) do |&block|
+          match do |m|
+            m.right { |value| either.right(block.call(value)) }
+            m.left self
+          end
+        end
       end
 
       expect(either.left('uh oh').to_s)
@@ -41,6 +50,12 @@ RSpec.describe SumsUp do
 
       expect(either.from_block { 'yay' }[:value])
         .to(eq('yay'))
+
+      expect(either.right(1).map(&:succ))
+        .to(eq(either.right(2)))
+
+      expect(either.left(1).map(&:to_s))
+        .to(eq(either.left(1)))
 
       err = StandardError.new
 

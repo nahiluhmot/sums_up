@@ -8,7 +8,7 @@ RSpec.describe SumsUp::Core::Matcher do
   end
   let(:variant_instance) { double(:just, members: [128]) }
 
-  describe 'matching' do
+  describe 'block matching' do
     context 'when there are duplicate instances of the matched variant' do
       before do
         subject.just(1)
@@ -268,6 +268,83 @@ RSpec.describe SumsUp::Core::Matcher do
           end
         end
       end
+    end
+  end
+
+  describe 'hash matching' do
+    it 'raises when an unknown variant is provided' do
+      expect { subject._match_hash(just: 1, unknown: 0, _: -1) }
+        .to(
+          raise_error(
+            SumsUp::UnknownVariantError,
+            "Unknown variant 'unknown', valid variants are: just, nothing"
+          )
+        )
+    end
+
+    it 'raises when the an incorrect variant is not matched' do
+      subject._match_hash(just: 1)
+
+      expect { subject._fetch_result }
+        .to(
+          raise_error(
+            SumsUp::UnmatchedVariantError,
+            'Did not match the following variants: nothing'
+          )
+        )
+    end
+
+    it 'raises when the correct variant is not matched' do
+      subject._match_hash(nothing: 0)
+
+      expect { subject._fetch_result }
+        .to(
+          raise_error(
+            SumsUp::UnmatchedVariantError,
+            'Did not match the following variants: just'
+          )
+        )
+    end
+
+    it 'raises when the wildcard is matched before the correct variant' do
+      expect { subject._match_hash(_: 0, just: 1) }
+        .to(
+          raise_error(
+            SumsUp::MatchAfterWildcardError,
+            'Attempted to match variant after wildcard (_): just'
+          )
+        )
+    end
+
+    it 'raises when the wildcard is matched before an incorrect variant' do
+      expect { subject._match_hash(_: 0, nothing: -1) }
+        .to(
+          raise_error(
+            SumsUp::MatchAfterWildcardError,
+            'Attempted to match variant after wildcard (_): nothing'
+          )
+        )
+    end
+
+    it 'matches when the wildcard is not matched' do
+      subject._match_hash(just: 2, _: 3)
+
+      expect(subject._fetch_result)
+        .to(eq(2))
+    end
+
+    it 'matches when the wildcard is matched' do
+      subject._match_hash(nothing: 3, _: 4)
+
+      expect(subject._fetch_result)
+        .to(eq(4))
+    end
+
+    it 'matches when all variants are explicitly matched' do
+      subject._match_hash(just: 42, nothing: -41)
+
+      expect(subject._fetch_result)
+        .to(eq(42))
     end
   end
 end

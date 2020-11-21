@@ -56,6 +56,27 @@ module SumsUp
         self
       end
 
+      def _match_hash(hash)
+        variants = self.class::ALL_VARIANTS
+        unknown_variants = hash
+          .each_key
+          .reject { |key| (key == :_) || variants.include?(key) }
+
+        if (unknown_variant = unknown_variants.first)
+          raise(
+            UnknownVariantError,
+            "Unknown variant '#{unknown_variant}', valid variants are: " +
+            variants.join(', ')
+          )
+        end
+
+        hash.each do |variant, value|
+          public_send(variant, value)
+        end
+
+        self
+      end
+
       def _fetch_result
         variants = self.class::ALL_VARIANTS
 

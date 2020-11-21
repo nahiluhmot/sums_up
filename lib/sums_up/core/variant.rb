@@ -68,10 +68,14 @@ module SumsUp
         @values[idx] = val
       end
 
-      def match
+      def match(**kwargs)
         matcher = self.class::Matcher.new(self)
 
-        yield(matcher)
+        if block_given?
+          yield(matcher)
+        else
+          matcher._match_hash(kwargs)
+        end
 
         matcher._fetch_result
       end

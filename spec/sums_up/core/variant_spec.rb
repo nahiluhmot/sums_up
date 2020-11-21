@@ -380,30 +380,57 @@ RSpec.describe SumsUp::Core::Variant do
         .and_return('two arg variant match result')
     end
 
-    it 'creates a new matcher, yields it, then fetches the result' do
-      no_arg_result = no_arg_variant_instance.match do |matcher|
-        expect(matcher)
-          .to(eq(no_arg_matcher_instance))
+    context 'given a block' do
+      it 'creates a matcher, yields it, then fetches the result' do
+        no_arg_result = no_arg_variant_instance.match do |matcher|
+          expect(matcher)
+            .to(eq(no_arg_matcher_instance))
+        end
+
+        one_arg_result = one_arg_variant_instance.match do |matcher|
+          expect(matcher)
+            .to(eq(one_arg_matcher_instance))
+        end
+
+        two_arg_result = two_arg_variant_instance.match do |matcher|
+          expect(matcher)
+            .to(eq(two_arg_matcher_instance))
+        end
+
+        expect(no_arg_result)
+          .to(eq('no arg variant match result'))
+
+        expect(one_arg_result)
+          .to(eq('one arg variant match result'))
+
+        expect(two_arg_result)
+          .to(eq('two arg variant match result'))
       end
+    end
 
-      one_arg_result = one_arg_variant_instance.match do |matcher|
-        expect(matcher)
-          .to(eq(one_arg_matcher_instance))
+    context 'given no block' do
+      it 'creates a matcher, matches the kwargs, and fetches the result' do
+        expect(no_arg_matcher_instance)
+          .to(receive(:_match_hash))
+          .with({})
+
+        expect(one_arg_matcher_instance)
+          .to(receive(:_match_hash))
+          .with(one_arg: true)
+
+        expect(two_arg_matcher_instance)
+          .to(receive(:_match_hash))
+          .with(left: 1, right: 2)
+
+        expect(no_arg_variant_instance.match(**{}))
+          .to(eq('no arg variant match result'))
+
+        expect(one_arg_variant_instance.match(one_arg: true))
+          .to(eq('one arg variant match result'))
+
+        expect(two_arg_variant_instance.match(left: 1, right: 2))
+          .to(eq('two arg variant match result'))
       end
-
-      two_arg_result = two_arg_variant_instance.match do |matcher|
-        expect(matcher)
-          .to(eq(two_arg_matcher_instance))
-      end
-
-      expect(no_arg_result)
-        .to(eq('no arg variant match result'))
-
-      expect(one_arg_result)
-        .to(eq('one arg variant match result'))
-
-      expect(two_arg_result)
-        .to(eq('two arg variant match result'))
     end
   end
 
