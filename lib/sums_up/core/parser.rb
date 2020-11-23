@@ -16,7 +16,8 @@ module SumsUp
         arg_variants.each_value(&method(:validate_variant_args!))
 
         no_arg_variants
-          .to_h { |name| [name, []] }
+          .map { |variant| [variant, []] }
+          .to_h
           .merge(arg_variants.transform_values { |ary| [*ary] })
       end
 

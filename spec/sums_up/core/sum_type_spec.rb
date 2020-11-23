@@ -5,22 +5,22 @@ RSpec.describe SumsUp::Core::SumType do
 
   let(:classes) { [nothing_variant_class, just_variant_class] }
   let(:nothing_variant_class) do
-    Class.new.tap do |klass|
-      klass.const_set(:VARIANT, :nothing)
-      klass.const_set(:MEMBERS, [])
+    Class.new do
+      const_set(:VARIANT, :nothing)
+      const_set(:MEMBERS, [])
 
-      klass.define_method(:==) { |other| other.is_a?(self.class) }
+      define_method(:==) { |other| other.is_a?(self.class) }
     end
   end
   let(:just_variant_class) do
-    Class.new.tap do |klass|
-      klass.const_set(:VARIANT, :just)
-      klass.const_set(:MEMBERS, %i[value])
+    Class.new do
+      const_set(:VARIANT, :just)
+      const_set(:MEMBERS, %i[value])
 
-      klass.attr_reader(:value)
+      attr_reader(:value)
 
-      klass.define_method(:initialize) { |value| @value = value }
-      klass.define_method(:==) do |other|
+      define_method(:initialize) { |value| @value = value }
+      define_method(:==) do |other|
         other.is_a?(self.class) && (other.value == value)
       end
     end

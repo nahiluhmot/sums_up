@@ -8,29 +8,28 @@ module SumsUp
     # given the other variant names.
     class Matcher
       def self.build_matcher_class(variant, other_variants)
-        Class.new(self).tap do |matcher_class|
-          matcher_class.const_set(:VARIANT, variant)
-          matcher_class.const_set(:ALL_VARIANTS, [variant, *other_variants])
-          matcher_class.const_set(
-            :IncorrectMatcher,
-            incorrect_matcher_module(other_variants)
-          )
+        Class.new(self) do
+          const_set(:VARIANT, variant)
+          const_set(:ALL_VARIANTS, [variant, *other_variants])
+          const_set(:IncorrectMatcher, incorrect_matcher_module(other_variants))
 
-          matcher_class.include(matcher_class.const_get(:IncorrectMatcher))
+          include(const_get(:IncorrectMatcher))
 
-          matcher_class.alias_method(variant, :_correct_variant_matcher)
+          alias_method(variant, :_correct_variant_matcher)
         end
       end
 
       def self.incorrect_matcher_module(variants)
-        variants.each_with_object(Module.new) do |variant, mod|
-          mod.define_method(variant) do |_value = nil|
-            _ensure_wildcard_not_matched!(variant)
-            _ensure_no_duplicate_match!(variant)
+        Module.new do
+          variants.each do |variant|
+            define_method(variant) do |_value = nil|
+              _ensure_wildcard_not_matched!(variant)
+              _ensure_no_duplicate_match!(variant)
 
-            @matched_variants << variant
+              @matched_variants << variant
 
-            self
+              self
+            end
           end
         end
       end

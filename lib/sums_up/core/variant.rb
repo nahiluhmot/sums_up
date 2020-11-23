@@ -6,38 +6,35 @@ module SumsUp
     # a new subclass for a given variant.
     class Variant
       def self.build_variant_class(name, other_names, members, matcher_class)
-        Class.new(self).tap do |variant_class|
-          variant_class.const_set(:VARIANT, name)
-          variant_class.const_set(:MEMBERS, members)
+        Class.new(self) do
+          const_set(:VARIANT, name)
+          const_set(:MEMBERS, members)
 
-          variant_class.const_set(:Accessors, accessors_module(members))
-          variant_class.const_set(:Matcher, matcher_class)
-          variant_class.const_set(
-            :Predicates,
-            predicates_module(name, other_names)
-          )
+          const_set(:Accessors, accessors_module(members))
+          const_set(:Matcher, matcher_class)
+          const_set(:Predicates, predicates_module(name, other_names))
 
-          variant_class.include(variant_class.const_get(:Accessors))
-          variant_class.include(variant_class.const_get(:Predicates))
+          include(const_get(:Accessors))
+          include(const_get(:Predicates))
         end
       end
 
       def self.accessors_module(members)
-        Module.new.tap do |mod|
+        Module.new do
           members.each_with_index do |member, idx|
-            mod.define_method(member) { @values[idx] }
+            define_method(member) { @values[idx] }
 
-            mod.define_method(:"#{member}=") { |val| @values[idx] = val }
+            define_method(:"#{member}=") { |val| @values[idx] = val }
           end
         end
       end
 
       def self.predicates_module(correct_name, incorrect_names)
-        Module.new.tap do |mod|
-          mod.define_method(:"#{correct_name}?", &Functions.const(true))
+        Module.new do
+          define_method(:"#{correct_name}?", &Functions.const(true))
 
           incorrect_names.each do |incorrect_name|
-            mod.define_method(:"#{incorrect_name}?", &Functions.const(false))
+            define_method(:"#{incorrect_name}?", &Functions.const(false))
           end
         end
       end
