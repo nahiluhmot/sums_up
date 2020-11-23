@@ -10,7 +10,7 @@ module SumsUp
       def self.build_matcher_class(variant, other_variants)
         Class.new(self) do
           const_set(:VARIANT, variant)
-          const_set(:ALL_VARIANTS, [variant, *other_variants])
+          const_set(:ALL_VARIANTS, [variant, *other_variants].freeze)
           const_set(:IncorrectMatcher, incorrect_matcher_module(other_variants))
 
           include(const_get(:IncorrectMatcher))

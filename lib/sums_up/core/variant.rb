@@ -8,7 +8,7 @@ module SumsUp
       def self.build_variant_class(name, other_names, members, matcher_class)
         Class.new(self) do
           const_set(:VARIANT, name)
-          const_set(:MEMBERS, members)
+          const_set(:MEMBERS, members.freeze)
 
           const_set(:Accessors, accessors_module(members))
           const_set(:Matcher, matcher_class)

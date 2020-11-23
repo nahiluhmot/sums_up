@@ -15,7 +15,7 @@ module SumsUp
 
       def self.build(variant_classes, &block)
         new(&block).tap do |sum_type|
-          sum_type.const_set(:VARIANTS, variant_classes)
+          sum_type.const_set(:VARIANTS, variant_classes.freeze)
 
           variant_classes.each do |variant_class|
             variant_name = variant_class.const_get(:VARIANT)
