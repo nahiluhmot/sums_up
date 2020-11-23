@@ -102,19 +102,24 @@ module SumsUp
         end
       end
 
-      def to_s
+      def inspect
         io = StringIO.new
-        io << "#<variant #{self.class::VARIANT}"
+        # If a sum type is defined but not assigned to a constant, Class.name
+        # name will return nil.
+        variant = self.class.name || self.class::VARIANT
+        io << "#<variant #{variant}"
 
         self.class::MEMBERS.each_with_index do |member, idx|
           io << (idx.zero? ? ' ' : ', ')
-          io << "#{member}=#{@values[idx]}"
+          io << "#{member}=#{@values[idx].inspect}"
         end
 
         io << '>'
 
         io.string
       end
+
+      alias to_s inspect
 
       def ==(other)
         other.is_a?(self.class) &&

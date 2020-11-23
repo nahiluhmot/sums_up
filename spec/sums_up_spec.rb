@@ -46,7 +46,7 @@ RSpec.describe SumsUp do
       end
 
       expect(either.left('uh oh').to_s)
-        .to(eq('#<variant left value=uh oh>'))
+        .to(eq('#<variant left value="uh oh">'))
 
       expect(either.from_block { 'yay' }[:value])
         .to(eq('yay'))

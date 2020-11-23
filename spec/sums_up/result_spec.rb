@@ -17,6 +17,16 @@ RSpec.describe SumsUp::Result do
     end
   end
 
+  describe '#to_s' do
+    it 'uses the class name' do
+      expect(SumsUp::Result.success('oh good').to_s)
+        .to(eq('#<variant SumsUp::Result::Success value="oh good">'))
+
+      expect(SumsUp::Result.failure('oh no').to_s)
+        .to(eq('#<variant SumsUp::Result::Failure error="oh no">'))
+    end
+  end
+
   describe '#map' do
     it 'yields the value and re-wraps the result on success' do
       expect(

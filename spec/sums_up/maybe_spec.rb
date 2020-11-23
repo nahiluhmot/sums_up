@@ -13,6 +13,16 @@ RSpec.describe SumsUp::Maybe do
     end
   end
 
+  describe '#to_s' do
+    it 'uses the class name' do
+      expect(SumsUp::Maybe.nothing.to_s)
+        .to(eq('#<variant SumsUp::Maybe::Nothing>'))
+
+      expect(SumsUp::Maybe.just(1).to_s)
+        .to(eq('#<variant SumsUp::Maybe::Just value=1>'))
+    end
+  end
+
   describe '#map' do
     it 'returns nothing when the receiver is nothing' do
       expect(SumsUp::Maybe.nothing.map(&:succ))

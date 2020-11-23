@@ -490,10 +490,10 @@ RSpec.describe SumsUp::Core::Variant do
         .to(eq('#<variant no_arg_variant>'))
 
       expect(one_arg_variant_instance.to_s)
-        .to(eq('#<variant one_arg_variant value=test>'))
+        .to(eq('#<variant one_arg_variant value="test">'))
 
       expect(two_arg_variant_instance.to_s)
-        .to(eq('#<variant two_arg_variant first=left, second=right>'))
+        .to(eq('#<variant two_arg_variant first="left", second="right">'))
     end
   end
 
