@@ -36,13 +36,28 @@ module SumsUp
           .to_sym
       end
 
+      # Variants without any members are frozen by default for performance.
+      # Pass `memo: false` to its initializer to opt out of this behavior:
+      #
+      #   Maybe = SumsUp.define(:nothing, just: :value)
+      #
+      #   frozen_nothing = Maybe.nothing
+      #   unfrozen_nothing = Maybe.nothing(memo: false)
+      #
+      #   # Variants with members are never frozen.
+      #   unfrozen_just = Maybe.just(1)
+      #
       def self.variant_initializer(variant_class)
-        members = variant_class.const_get(:MEMBERS)
-
-        if members.empty?
-          Functions.const(variant_class.new)
+        if variant_class.const_get(:MEMBERS).empty?
+          dup_if_overridden(variant_class.new.freeze)
         else
           variant_class.method(:new)
+        end
+      end
+
+      def self.dup_if_overridden(frozen)
+        proc do |memo: true|
+          memo ? frozen : frozen.dup
         end
       end
     end

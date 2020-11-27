@@ -42,22 +42,33 @@ RSpec.describe SumsUp::Core::SumType do
   end
 
   describe 'no-arg variant consturctors' do
-    it 'returns the same object every time' do
+    it 'returns the same object every time unless overridden' do
       nothing_instance = subject.nothing
+      duped_instance = subject.nothing(memo: false)
 
       expect(nothing_instance)
+        .to(be_a(nothing_variant_class))
+      expect(duped_instance)
         .to(be_a(nothing_variant_class))
 
       expect(nothing_instance)
         .to(eq(nothing_variant_class.new))
+      expect(duped_instance)
+        .to(eq(nothing_variant_class.new))
 
       expect(nothing_instance)
+        .to_not(eq(subject.just(1)))
+      expect(duped_instance)
         .to_not(eq(subject.just(1)))
 
       expect(nothing_instance)
         .to(equal(subject.nothing))
+      expect(duped_instance)
+        .to_not(equal(subject.nothing))
 
       expect(nothing_instance)
+        .to_not(equal(nothing_variant_class.new))
+      expect(duped_instance)
         .to_not(equal(nothing_variant_class.new))
     end
   end
