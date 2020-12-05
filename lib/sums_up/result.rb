@@ -7,7 +7,7 @@ module SumsUp
   # Result.success(value) represents a success and contains a value;
   # Result.failure(error) represents an error with a propagated error.
   #
-  # https://doc.rust-lang.org/std/result/
+  # [0] https://doc.rust-lang.org/std/result/
   Result = SumsUp.define(failure: :error, success: :value) do
     # Yield, wrapping the result in Result.success, or wrap the raised error
     # in Result.failure.
