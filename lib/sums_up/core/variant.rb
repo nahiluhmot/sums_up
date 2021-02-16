@@ -102,7 +102,7 @@ module SumsUp
       def inspect
         io = StringIO.new
         # If a sum type is defined but not assigned to a constant, Class.name
-        # name will return nil.
+        # name will return nil in Ruby 2.
         variant = self.class.name || self.class::VARIANT
         io << "#<variant #{variant}"
 
