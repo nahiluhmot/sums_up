@@ -21,18 +21,19 @@ Define a sum type:
 
 ```ruby
 Direction = SumsUp.define(:north, :south, :east, :west)
+# => Direction
 
 Direction.north
-=> #<variant Direction::North>
+# => #<variant Direction::North>
 
 Direction.south
-=> #<variant Direction::South>
+# => #<variant Direction::South>
 
 Direction.east
-=> #<variant Direction::East>
+# => #<variant Direction::East>
 
 Direction.west
-=> #<variant Direction::West>
+# => #<variant Direction::West>
 ```
 
 Use predicates to distinguish between variants:
@@ -44,10 +45,10 @@ def latitudinal?(direction)
 end
 
 latitudinal?(Direction.south)
-=> true
+# => true
 
 latitudinal?(Direction.west)
-=> false
+# => false
 ```
 
 Call `#match` to categorically handle each variant by name:
@@ -63,10 +64,10 @@ def turn_clockwise(direction)
 end
 
 turn_clockwise(Direction.north)
-=> #<variant Direction::East>
+# => #<variant Direction::East>
 
 turn_clockwise(turn_clockwise(Direction.north))
-=> #<variant Direction::South>
+# => #<variant Direction::South>
 ```
 
 ## Defining Sum Types
@@ -84,20 +85,22 @@ To model the menu using sum types, let's start out with some simple enumerations
 
 ```ruby
 Size = SumsUp.define(:small, :large)
+# => Size
 
 Temperature = SumsUp.define(:hot, :iced)
+# => Temperature
 
 Size.small
-=> #<variant Size::Small>
+# => #<variant Size::Small>
 
 Size.large
-=> #<variant Size::Large>
+# => #<variant Size::Large>
 
 Temperature.hot
-=> #<variant Temperature::Hot>
+# => #<variant Temperature::Hot>
 
 Temperature.iced
-=> #<variant Temperature::Iced>
+# => #<variant Temperature::Iced>
 ```
 
 Enumerations work well for `Size` and `Temperature`, but defining a `Drink` type will be a bit more work.
@@ -112,28 +115,29 @@ Drink = SumsUp.define(
   lemonade: :size,
   coffee: [:size, :temperature]
 )
+# => Drink
 
 Drink.water
-=> #<variant Drink::Water>
+# => #<variant Drink::Water>
 
 lemonade = Drink.lemonade(Size.small)
-=> #<variant Drink::Lemonade size=#<variant Size::Small>>
+# => #<variant Drink::Lemonade size=#<variant Size::Small>>
 
 lemonade.size
-=> #<variant Size::Small>
+# => #<variant Size::Small>
 
 coffee = Drink.coffee(Size.large, Temperature.iced)
-=> #<variant Drink::Coffe size=#<variant Size::Large> temperature=#<variant Temperature::Iced>>
+# => #<variant Drink::Coffe size=#<variant Size::Large> temperature=#<variant Temperature::Iced>>
 
 coffee.size
-=> #<variant Size::Large>
+# => #<variant Size::Large>
 
 coffee.temperature
-=> #<variant Temperature::Iced>
+# => #<variant Temperature::Iced>
 
 # Raises because only coffee and lemonade have a size.
 Drink.water.size
-=> NoMethodError: undefined method `size' for #<variant Drink::Water>
+# => NoMethodError: undefined method `size' for #<variant Drink::Water>
 ```
 
 ## Predicates
@@ -142,20 +146,20 @@ Predicates are defined for each variant of a sum type:
 
 ```ruby
 Size.large.large?
-=> true
+# => true
 
 Temperature.hot.iced?
-=> false
+# => false
 
 Temperature.iced.iced?
-=> true
+# => true
 
 Drink.water.coffee?
-=> false
+# => false
 
 # Raises because Temperature only has `#hot?` and `#iced?` predicates.
 Temperature.hot.water?
-=> NoMethodError: undefined method `water?' for #<variant Temperature::Hot>
+# => NoMethodError: undefined method `water?' for #<variant Temperature::Hot>
 ```
 
 We can use these to write a function which returns the `Temperature` for a given `Drink`.
@@ -171,10 +175,10 @@ def drink_temperature(drink)
 end
 
 drink_temperature(Drink.lemonade(Size.large))
-=> #<variant Temperature::Iced>
+# => #<variant Temperature::Iced>
 
 drink_temperature(Drink.coffee(Size.small, Temperature.hot))
-=> #<variant Temperature::Hot>
+# => #<variant Temperature::Hot>
 ```
 
 ## Pattern Matching with Hashes
@@ -192,10 +196,10 @@ def format_temperature(temperature)
 end
 
 format_size(Size.large)
-=> 'Large'
+# => 'Large'
 
 format_temperature(Temperature.iced)
-=> 'Iced'
+# => 'Iced'
 ```
 
 In some cases, it can be convenient to match against some variants and use a wildcard for the rest:
@@ -206,10 +210,10 @@ def free?(drink)
 end
 
 free?(Drink.water)
-=> true
+# => true
 
 free?(Drink.lemonade(Size.large))
-=> false
+# => false
 ```
 
 `#match` will raise if any variants are left unmatched.
@@ -222,11 +226,11 @@ end
 
 # Raises because water is not matched.
 added_sugar?(Drink.water)
-=> SumsUp::UnmatchedVariantError: Did not match the following variants: water
+# => SumsUp::UnmatchedVariantError: Did not match the following variants: water
 
 # Raises because water is not matched, even though a lemonade is getting passed in.
 added_sugar?(Drink.lemonade(Size.large))
-=> SumsUp::UnmatchedVariantError: Did not match the following variants: water
+# => SumsUp::UnmatchedVariantError: Did not match the following variants: water
 ```
 
 ## Pattern Matching with Blocks
@@ -247,13 +251,13 @@ def format_drink(drink)
 end
 
 format_drink(Drink.water)
-=> 'Water'
+# => 'Water'
 
 format_drink(Drink.lemonade(Size.small))
-=> 'Small Lemonade'
+# => 'Small Lemonade'
 
 format_drink(Drink.coffee(Size.large, Temperature.iced))
-=> 'Large Iced Coffee'
+# => 'Large Iced Coffee'
 ```
 
 Like Hash-based pattern matching, Block-based pattern matching can use wildcards as well.
@@ -268,7 +272,7 @@ def drink_temperature(drink)
 end
 
 drink_temperature(Drink.water)
-=> #<variant Temperature::Iced>
+# => #<variant Temperature::Iced>
 ```
 
 The match syntax also supports passing values directly to the matcher, as opposed to passing a block:
@@ -284,10 +288,10 @@ def drink_size(drink)
 end
 
 drink_size(Drink.water)
-=> #<variant Size::Small>
+# => #<variant Size::Small>
 
 drink_size(Drink.lemonade(Size.small))
-=> #<variant Size::Small>
+# => #<variant Size::Small>
 ```
 
 This syntax will also raise if not all variants of a type are matched:
@@ -302,11 +306,11 @@ end
 
 # Raises because coffee is not matched.
 drink_price(Drink.coffee(Size.large, Temperature.hot))
-=> SumsUp::UnmatchedVariantError: Did not match the following variants: coffee
+# => SumsUp::UnmatchedVariantError: Did not match the following variants: coffee
 
 # Raises because coffee is not matched, even though a water is getting passed in.
 drink_price(Drink.water)
-=> SumsUp::UnmatchedVariantError: Did not match the following variants: coffee
+# => SumsUp::UnmatchedVariantError: Did not match the following variants: coffee
 ```
 
 ## Methods on Sum Types
@@ -325,13 +329,13 @@ Drink = SumsUp.define(:water, lemonade: :size, coffee: [:temperature, :size]) do
 end
 
 Drink.water.price_in_cents
-=> 0
+# => 0
 
 Drink.lemonade(Size.small).price_in_cents
-=> 350
+# => 350
 
 Drink.coffee(Size.large, Temperature.hot).price_in_cents
-=> 395
+# => 395
 ```
 
 This syntax also supports class methods and constants:
@@ -354,16 +358,16 @@ Size = SumsUp.define(:small, :large) do
 end
 
 Size::SMALL_STRING
-=> 'Small'
+# => 'Small'
 
 Size::LARGE_STRING
-=> 'Large'
+# => 'Large'
 
 Size.parse('Small')
-=> #<variant Size::Small>
+# => #<variant Size::Small>
 
 Size.parse('Trenta')
-=> ArgumentError: Invalid size: Trenta
+# => ArgumentError: Invalid size: Trenta
 ```
 
 ## A Note on Mutability
@@ -390,40 +394,40 @@ The `Drink.lemonade` and `Drink.coffee` variants would be unaffected because the
 
 ```ruby
 Drink.lemonade(Size.large).price_in_cents
-=> 450
+# => 450
 
 Drink.coffee(Size.small, Temperature.hot).price_in_cents
-=> 295
+# => 295
 ```
 
 However, `Drink.water` will raise because it is frozen:
 
 ```ruby
 Drink.water.price_in_cents
-=> RuntimeError: can't modify frozen Drink::Water
+# => RuntimeError: can't modify frozen Drink::Water
 ```
 
 In general, it's better to find solutions which don't require state to be tracked within data types, but if mutability is absolutely required, we can work around this by passing `memo: false` to the memberless variant's initializer:
 
 ```ruby
 Drink.water(memo: false).price_in_cents
-=> 0
+# => 0
 ```
 
 This will work with any memberless variant:
 
 ```ruby
 Size.small(memo: false)
-=> #<variant Size::Small>
+# => #<variant Size::Small>
 
 Size.large(memo: false)
-=> #<variant Size::Large>
+# => #<variant Size::Large>
 
 Temperature.hot(memo: false)
-=> #<variant Temperature::Hot>
+# => #<variant Temperature::Hot>
 
 Temperature.iced(memo: false)
-=> #<variant Temperature::Iced>
+# => #<variant Temperature::Iced>
 ```
 
 ## Maybes
@@ -434,26 +438,26 @@ Variants:
 
 ```ruby
 SumsUp::Maybe.nothing
-=> #<variant SumsUp::Maybe::Nothing>
+# => #<variant SumsUp::Maybe::Nothing>
 
 SumsUp::Maybe.just(1)
-=> #<variant SumsUp::Maybe::Just value=1>
+# => #<variant SumsUp::Maybe::Just value=1>
 ```
 
 Predicates:
 
 ```ruby
 SumsUp::Maybe.nothing.nothing?
-=> true
+# => true
 
 SumsUp::Maybe.nothing.just?
-=> false
+# => false
 
 SumsUp::Maybe.just(1).nothing?
-=> false
+# => false
 
 SumsUp::Maybe.just(2).just?
-=> true
+# => true
 ```
 
 Pattern matching:
@@ -467,49 +471,49 @@ def maybe_to_int(maybe)
 end
 
 maybe_to_int(SumsUp::Maybe.nothing)
-=> 0
+# => 0
 
 maybe_to_int(SumsUp::Maybe.just(1))
-=> 1
+# => 1
 ```
 
 `SumsUp::Maybe.of` builds a `SumsUp::Maybe` from a value which may be `nil`:
 
 ```ruby
 SumsUp::Maybe.of(nil)
-=> #<variant SumsUp::Maybe::Nothing>
+# => #<variant SumsUp::Maybe::Nothing>
 
 SumsUp::Maybe.of('cat')
-=> #<variant SumsUp::Maybe::Just value="cat">
+# => #<variant SumsUp::Maybe::Just value="cat">
 
 SumsUp::Maybe.of(false)
-=> #<variant SumsUp::Maybe::Just value=false>
+# => #<variant SumsUp::Maybe::Just value=false>
 ```
 
 `SumsUp::Maybe#map` applies a function to the value if it's present:
 
 ```ruby
 SumsUp::Maybe.nothing.map { |x| x + 1 }
-=> #<variant SumsUp::Maybe::Nothing>
+# => #<variant SumsUp::Maybe::Nothing>
 
 SumsUp::Maybe.just(3).map { |x| x + 1 }
-=> #<variant SumsUp::Maybe::Just value=4>
+# => #<variant SumsUp::Maybe::Just value=4>
 ```
 
 `SumsUp::Maybe#or_else` returns the wrapped value, or a default if it's not present:
 
 ```ruby
 SumsUp::Maybe.nothing.or_else(1)
-=> 1
+# => 1
 
 SumsUp::Maybe.nothing.or_else { 2 }
-=> 2
+# => 2
 
 SumsUp::Maybe.just(3).or_else(4)
-=> 3
+# => 3
 
 SumsUp::Maybe.just(4).or_else { 5 }
-=> 4
+# => 4
 ```
 
 ## Results
@@ -520,26 +524,26 @@ Variants:
 
 ```ruby
 SumsUp::Result.failure('update failed')
-=> #<variant SumsUp::Maybe::Failure error="update failed">
+# => #<variant SumsUp::Maybe::Failure error="update failed">
 
 SumsUp::Maybe.success('request payload')
-=> #<variant SumsUp::Maybe::Just value="request payload">
+# => #<variant SumsUp::Maybe::Just value="request payload">
 ```
 
 Predicates:
 
 ```ruby
 SumsUp::Result.failure(false).failure?
-=> true
+# => true
 
 SumsUp::Result.failure(0).success?
-=> false
+# => false
 
 SumsUp::Result.success(true).failure?
-=> false
+# => false
 
 SumsUp::Result.success(1).success?
-=> true
+# => true
 ```
 
 Pattern matching:
@@ -553,40 +557,40 @@ def flip_result(result)
 end
 
 flip_result(SumsUp::Result.success('yay'))
-=> #<variant SumsUp::Result::Failure error="yay">
+# => #<variant SumsUp::Result::Failure error="yay">
 
 flip_result(flip_result(SumsUp::Result.failure('boo')))
-=> #<variant SumsUp::Result::Failure error="boo">
+# => #<variant SumsUp::Result::Failure error="boo">
 ```
 
 `SumsUp::Result.from_block` converts a block which may raise into a `SumsUp::Result`:
 
 ```ruby
 SumsUp::Result.from_block { raise 'unexpected error' }
-=> #<variant SumsUp::Result::Failure error=#<RuntimeError: unexpected error>>
+# => #<variant SumsUp::Result::Failure error=#<RuntimeError: unexpected error>>
 
 SumsUp::Result.from_block { 'good result' }
-=> #<variant SumsUp::Result::Success value="good result">
+# => #<variant SumsUp::Result::Success value="good result">
 ```
 
 `SumsUp::Result#map` applies a function to the successful values:
 
 ```ruby
 SumsUp::Result.failure('sorry kid').map { |x| x + ', nothing personal' }
-=> #<variant SumsUp::Result::Failure error="sorry kid">
+# => #<variant SumsUp::Result::Failure error="sorry kid">
 
 SumsUp::Result.success(10).map { |x| x * 2 }
-=> #<variant SumsUp::Result::Success value=20>
+# => #<variant SumsUp::Result::Success value=20>
 ```
 
 `SumsUp::Result#map_failure` applies a function to the failure errors:
 
 ```ruby
 SumsUp::Result.failure('sorry kid').map_failure { |x| x + ', nothing personal' }
-=> #<variant SumsUp::Result::Failure error="sorry kid, nothing personal">
+# => #<variant SumsUp::Result::Failure error="sorry kid, nothing personal">
 
 SumsUp::Result.success(10).map_failure { |x| x * 2 }
-=> #<variant SumsUp::Result::Success value=10>
+# => #<variant SumsUp::Result::Success value=10>
 ```
 
 ## Development
