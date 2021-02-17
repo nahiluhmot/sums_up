@@ -372,7 +372,7 @@ Size.parse('Trenta')
 
 ## A Note on Mutability
 
-All variants without members without members are memoized and frozen by default.
+All variants without members are memoized and frozen by default.
 In our running example calling `Size.small`, `Size.large`, `Temperature.hot`, `Temperature.iced`, and `Drink.water` would all return memoized and frozen objects, but `Drink.lemonade(size)` and `Drink.coffee(size, temperature)` would not.
 This helps reduce the memory footprint of the gem, but makes it so that we cannot write to instance variables within the class.
 
