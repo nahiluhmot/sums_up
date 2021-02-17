@@ -1,10 +1,23 @@
 # sums_up
 
-Sum types for Ruby with zero runtime dependencies.
-
-Inspired by [hojberg/sums-up](https://github.com/hojberg/sums-up).
+Sum types for Ruby with zero runtime dependencies. Inspired by [hojberg/sums-up](https://github.com/hojberg/sums-up).
 
 [![Build Status](https://travis-ci.org/nahiluhmot/sums_up.svg?branch=master)](https://travis-ci.org/nahiluhmot/sums_up)
+
+* [What is a Sum Type?](#what-is-a-sum-type)
+* [Quick Start](#quick-start)
+* [Defining Sum Types](#defining-sum-types)
+* [Predicates](#predicates)
+* [Pattern Matching with Hashes](#pattern-matching-with-hashes)
+* [Pattern Matching with Blocks](#pattern-matching-with-blocks)
+* [Methods on Sum Types](#methods-on-sum-types)
+* [A Note on Mutability](#a-note-on-mutability)
+* [Maybes](#maybes)
+* [Results](#results)
+* [Development](#development)
+* [Contributing](#contributing)
+* [License](#license)
+* [Code of Conduct](#code-of-conduct)
 
 ## What is a Sum Type?
 
