@@ -1,7 +1,24 @@
 # frozen_string_literal: true
 
 RSpec.describe SumsUp::Core::SumType do
-  subject { described_class.build(classes, &sum_type_initializer) }
+  # Maybe-like example type.
+  subject do
+    described_class.build(classes).module_eval do
+      def self.of(value)
+        if value.nil?
+          nothing
+        else
+          just(value)
+        end
+      end
+
+      def or_else(other)
+        respond_to?(:value) ? value : other
+      end
+
+      self
+    end
+  end
 
   let(:classes) { [nothing_variant_class, just_variant_class] }
   let(:nothing_variant_class) do
@@ -22,21 +39,6 @@ RSpec.describe SumsUp::Core::SumType do
       define_method(:initialize) { |value| @value = value }
       define_method(:==) do |other|
         other.is_a?(self.class) && (other.value == value)
-      end
-    end
-  end
-  let(:sum_type_initializer) do
-    proc do
-      def self.of(value)
-        if value.nil?
-          nothing
-        else
-          just(value)
-        end
-      end
-
-      def or_else(other)
-        respond_to?(:value) ? value : other
       end
     end
   end

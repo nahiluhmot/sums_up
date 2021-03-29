@@ -13,19 +13,19 @@ module SumsUp
     class SumType < Module
       private_class_method :new
 
-      def self.build(variant_classes, &block)
-        new(&block).tap do |sum_type|
-          sum_type.const_set(:VARIANTS, variant_classes.freeze)
+      def self.build(variant_classes)
+        new do
+          const_set(:VARIANTS, variant_classes.freeze)
 
           variant_classes.each do |variant_class|
             variant_name = variant_class.const_get(:VARIANT)
-            class_name = variant_class_name(variant_name)
-            initializer = variant_initializer(variant_class)
+            class_name = SumType.variant_class_name(variant_name)
+            initializer = SumType.variant_initializer(variant_class)
 
-            sum_type.const_set(class_name, variant_class)
-            sum_type.define_singleton_method(variant_name, &initializer)
+            const_set(class_name, variant_class)
+            define_singleton_method(variant_name, &initializer)
 
-            variant_class.include(sum_type)
+            variant_class.include(self)
           end
         end
       end

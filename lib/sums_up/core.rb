@@ -24,7 +24,9 @@ module SumsUp
         Variant.build_variant_class(name, others, members, matcher_class)
       end
 
-      SumType.build(variant_classes, &block)
+      SumType
+        .build(variant_classes)
+        .tap { |sum_type| sum_type.module_eval(&block) }
     end
   end
 end
