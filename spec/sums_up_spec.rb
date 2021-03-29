@@ -14,7 +14,7 @@ RSpec.describe SumsUp do
 
     it 'builds a sum type given only no-arg variants' do
       expect(SumsUp::TestTypes::Color.red.to_s)
-        .to((eq('#<variant SumsUp::TestTypes::Color::Red>')))
+        .to(eq('#<variant SumsUp::TestTypes::Color::Red>'))
 
       expect(SumsUp::TestTypes::Color.red)
         .to(be_not_blue)
