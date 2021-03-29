@@ -3,7 +3,7 @@
 module SumsUp
   # To parahprase Rust's std::result docs[0]:
   #
-  # Result is a type used to returning and propagating errors.
+  # Result is a type used for returning and propagating errors.
   # Result.success(value) represents a success and contains a value;
   # Result.failure(error) represents an error with a propagated error.
   #
