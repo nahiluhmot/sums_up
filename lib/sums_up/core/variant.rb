@@ -100,20 +100,20 @@ module SumsUp
       end
 
       def inspect
-        io = StringIO.new
         # If a sum type is defined but not assigned to a constant, Class.name
         # name will return nil in Ruby 2.
         variant = self.class.name || self.class::VARIANT
-        io << "#<variant #{variant}"
 
-        self.class::MEMBERS.each_with_index do |member, idx|
-          io << (idx.zero? ? ' ' : ', ')
-          io << "#{member}=#{@values[idx].inspect}"
+        attrs = self.class::MEMBERS
+          .zip(@values)
+          .map { |member, value| "#{member}=#{value.inspect}" }
+          .join(', ')
+
+        if attrs.empty?
+          "#<variant #{variant}>"
+        else
+          "#<variant #{variant} #{attrs}>"
         end
-
-        io << '>'
-
-        io.string
       end
 
       alias to_s inspect
