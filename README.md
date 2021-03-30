@@ -288,6 +288,8 @@ drink_temperature(Drink.water)
 # => #<variant Temperature::Iced>
 ```
 
+Note: if using the wildcard pattern matcher (`_`), it must come after the explicit variant matches.
+
 The match syntax also supports passing values directly to the matcher, as opposed to passing a block:
 
 ```ruby
