@@ -26,7 +26,7 @@ module SumsUp
 
       SumType
         .build(variant_classes)
-        .tap { |sum_type| sum_type.module_eval(&block) }
+        .tap { |sum_type| sum_type.module_eval(&block) if block }
     end
   end
 end
