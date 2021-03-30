@@ -15,6 +15,7 @@ Sum types for Ruby with zero runtime dependencies. Inspired by [hojberg/sums-up]
 * [A Note on Mutability](#a-note-on-mutability)
 * [Maybes](#maybes)
 * [Results](#results)
+* [Why?](#why)
 * [Development](#development)
 * [Contributing](#contributing)
 * [License](#license)
@@ -23,11 +24,11 @@ Sum types for Ruby with zero runtime dependencies. Inspired by [hojberg/sums-up]
 ## What is a Sum Type?
 
 Sum types are data structures with multiple variants.
-Ruby does not have sum types, but many concepts in the language (like booleans, integers, errors, etc.) can be described using sum types.
+Ruby does not have sum types, but many concepts in the language (like booleans, integers, errors, state machines, etc.) can be described using sum types.
 Sum types are not limited to those use-cases, however, and are a powerful tool for modeling domain-specific data as well.
 
-This README will use non-generalized examples of sum types to help build an intuition for when they might be useful.
-To learn more about sum types, I recommend watching [Philip Wadler's Category Theory for the Working Hacker](https://www.youtube.com/watch?v=V10hzjgoklA) and checking out [Elm's Custom Types](https://guide.elm-lang.org/types/custom_types.html), [Haskell's Sum Types](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types), and [Rust's Enums](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html).
+This README uses non-generalized examples of sum types to help build an intuition for when they might be useful.
+To learn more about sum types, I recommend watching [Philip Wadler's Category Theory for the Working Hacker](https://www.youtube.com/watch?v=V10hzjgoklA) and checking out [Elm's Custom Types](https://guide.elm-lang.org/types/custom_types.html), [Haskell's Sum Types](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types), [Rust's Enums](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html), and the [Wikipedia article on Algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type).
 
 ## Quick Start
 
@@ -395,7 +396,7 @@ In addition to user-defined methods, `#inspect`, and `#==`, variant instances co
 Fetch a variant's members by name:
 
 ```ruby
-coffee = Drink.coffee(Temperature.hot, Size.small)
+coffee = Drink.coffee(Size.small, Temperature.hot)
 coffee.size
 # => #<variant Size::Small>
 
@@ -414,7 +415,7 @@ lemonade.temperature
 Another way to access members is `#[]`:
 
 ```ruby
-coffee = Drink.coffee(Temperature.iced, Size.small)
+coffee = Drink.coffee(Size.small, Temperature.iced)
 coffee[:size]
 # => #<variant Size::Small>
 
@@ -433,7 +434,7 @@ lemonade[:temperature]
 Members may also be updated by name:
 
 ```ruby
-coffee = Drink.coffee(Temperature.hot, Size.small)
+coffee = Drink.coffee(Size.small, Temperature.hot)
 coffee.temperature = Temperature.iced # Oh, sorry, could you make that iced?
 coffee.temperature
 # => #<variant Temperature::Iced>
@@ -462,8 +463,8 @@ Drink.water.attributes
 Drink.lemonade(Size.small).attributes
 # => { size: #<variant Size::Small> }
 
-Drink.coffee(Temperataure.iced, Size.large).attributes
-# => { temperature: #<variant Temperature::Iced>, size: #<variant Size::Large> }
+Drink.coffee(Size.large, Temperataure.iced).attributes
+# => { size: #<variant Size::Large> , temperature: #<variant Temperature::Iced> }
 ```
 
 ### `#to_h`
@@ -477,8 +478,8 @@ Drink.water.to_h
 Drink.lemonade(Size.small).to_h
 # => { lemonade: { size: #<variant Size::Small> } }
 
-Drink.coffee(Temperataure.iced, Size.large).to_h
-# => { coffee: { temperature: #<variant Temperature::Iced>, size: #<variant Size::Large> } }
+Drink.coffee(Size.large, Temperataure.iced).to_h
+# => { coffee: { size: #<variant Size::Large> , temperature: #<variant Temperature::Iced> } }
 ```
 
 Use `include_root: false` to make this method behave like `#attributes`:
@@ -490,8 +491,8 @@ Drink.water.to_h(include_root: false)
 Drink.lemonade(Size.small).to_h(include_root: false)
 # => { size: #<variant Size::Small> }
 
-Drink.coffee(Temperataure.iced, Size.large).to_h(include_root: false)
-# => { temperature: #<variant Temperature::Iced>, size: #<variant Size::Large> }
+Drink.coffee(Size.large, Temperataure.iced).to_h(include_root: false)
+# => { size: #<variant Size::Large>, temperature: #<variant Temperature::Iced> }
 ```
 
 ### `#members`
@@ -505,8 +506,8 @@ Drink.water.members
 Drink.lemonade(Size.small).members
 # => [#<variant Size::Small>]
 
-Drink.coffee(Temperataure.iced, Size.large).members
-# => [#<variant Temperature::Iced>, #<variant Size::Large>]
+Drink.coffee(Size.large, Temperataure.iced).members
+# => [#<variant Size::Large>, #<variant Temperature::Iced>]
 ```
 
 ## A Note on Mutability
@@ -731,6 +732,65 @@ SumsUp::Result.failure('sorry kid').map_failure { |x| x + ', nothing personal' }
 SumsUp::Result.success(10).map_failure { |x| x * 2 }
 # => #<variant SumsUp::Result::Success value=10>
 ```
+
+## Why?
+
+Some of these examples may seem odd if you're not familiar with sum types.
+If we were instead using the tools provided by Ruby, we might use a boolean to determine whether a given drink is a small or large, hot or cold.
+This would work, of course, so why use sum types?
+
+Let's illustrate by defining `OtherDrink` using a `Struct` with booleans for `is_hot` and `is_large`
+
+```ruby
+OtherDrink = Struct.new(:type, :is_hot, :is_large) do
+  private_class_method(:new)
+
+  def self.water
+    new(:water, false, false)
+  end
+
+  def self.lemonade(is_large)
+    new(:lemonade, false, is_large)
+  end
+
+  def self.coffee(is_hot, is_large)
+    new(:coffee, is_hot, is_large)
+  end
+end
+
+OtherDrink.water
+# => #<struct OtherDrink type=:water, is_hot=false, is_large=false>
+
+OtherDrink.lemonade(true)
+# => #<struct OtherDrink type=:lemonade, is_hot=false, is_large=true>
+
+OtherDrink.coffee(true, false)
+# => #<struct OtherDrink type=:water, is_hot=true, is_large=false>
+```
+
+`OtherDrink` can do all of the things that `Drink` can, but its API is less descriptive.
+For example, to represent a small hot coffee using `OtherDrink`, we would call `OtherDrink.coffee(true, false)`.
+In the `sums_up`-defined `Drink`, we'd instead call `Drink.coffee(Size.small, Temperature.hot)`.
+This may seem a bit contrived, but using a sum type instead of a boolean can help make our code more declarative and self-documenting.
+
+Sum types can also provide extensibility when project requirements change.
+If our example cafe started carrying medium coffees and lemonades, we only need update our `Size` type to accomodate that:
+
+```ruby
+Size = SumsUp.define(:small, :medium, :large)
+
+Drink.coffee(Size.medium, Temperature.iced)
+# => #<variant Drink::Coffee size=#<variant Size::Medium> temperature=#<variant Temperature::Iced>>
+```
+
+How would we handle this if we were using `OtherDrink`?
+A boolean is no longer suitable given that we need to track three different possible options, so we would probably end up using symbols like `:small`, `:medium`, and `:large`.
+This will work, but refactoring will likely be more difficult.
+
+With `Size`, after adding `Size.medium`, we find our `Size#match` calls, ensure that we're handling `Size.medium`, and we're done.
+With `OtherDrink`'s `:small`, `:medium`, and `:large` symbols, we would need to refactor the code which uses `OtherDrink.is_large` to instead match on symbols, and we would also introduce the possibility that a drink's size is invalid.
+This can lead to us writing a lot of checks for invalid data which may or may not be necessary.
+Sum types will do this for you; there's no way to make an invalid `Size`, so we know that our `#match` calls are categorically handling all cases.
 
 ## Development
 
