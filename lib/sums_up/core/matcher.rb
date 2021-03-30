@@ -61,11 +61,11 @@ module SumsUp
           .each_key
           .reject { |key| (key == :_) || variants.include?(key) }
 
-        if (unknown_variant = unknown_variants.first)
+        if unknown_variants.any?
           raise(
             UnknownVariantError,
-            "Unknown variant '#{unknown_variant}', valid variants are: " +
-            variants.join(', ')
+            "Unknown variant(s): #{unknown_variants.join(', ')}; " \
+            "valid variant(s) are: #{variants.join(', ')}"
           )
         end
 
@@ -111,6 +111,8 @@ module SumsUp
 
         self
       end
+
+      private
 
       def _ensure_wildcard_not_matched!(variant)
         return unless @wildcard_matched

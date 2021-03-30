@@ -277,7 +277,7 @@ RSpec.describe SumsUp::Core::Matcher do
         .to(
           raise_error(
             SumsUp::UnknownVariantError,
-            "Unknown variant 'unknown', valid variants are: just, nothing"
+            'Unknown variant(s): unknown; valid variant(s) are: just, nothing'
           )
         )
     end
