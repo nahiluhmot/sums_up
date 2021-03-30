@@ -11,6 +11,7 @@ Sum types for Ruby with zero runtime dependencies. Inspired by [hojberg/sums-up]
 * [Pattern Matching with Hashes](#pattern-matching-with-hashes)
 * [Pattern Matching with Blocks](#pattern-matching-with-blocks)
 * [Methods on Sum Types](#methods-on-sum-types)
+* [Variant Instance Methods](#variant-instance-methods)
 * [A Note on Mutability](#a-note-on-mutability)
 * [Maybes](#maybes)
 * [Results](#results)
@@ -383,6 +384,129 @@ Size.parse('Small')
 
 Size.parse('Trenta')
 # => ArgumentError: Invalid size: Trenta
+```
+
+## Variant Instance Methods
+
+In addition to user-defined methods, `#inspect`, and `#==`, variant instances come with convenience methods for accessing and updating members.
+
+### Getters
+
+Fetch a variant's members by name:
+
+```ruby
+coffee = Drink.coffee(Temperature.hot, Size.small)
+coffee.size
+# => #<variant Size::Small>
+
+coffee.temperature
+# => #<variant Temperature::Hot>
+
+lemonade = Drink.lemonade(Size.large)
+lemonade.size
+# => #<variant Size::Large>
+
+# Lemonade does not have a 'temperature' member.
+lemonade.temperature
+# => NoMethodError: undefined method `temperature' for #<variant Drink::Lemonade size=#<variant Size::Large>>
+```
+
+Another way to access members is `#[]`:
+
+```ruby
+coffee = Drink.coffee(Temperature.iced, Size.small)
+coffee[:size]
+# => #<variant Size::Small>
+
+# #[] works with Strings as well.
+lemonade = Drink.lemonade(Size.large)
+lemonade['size']
+# => #<variant Size::Large>
+
+# #[] will raise given an invalid member.
+lemonade[:temperature]
+# => NameError: No member 'temperature' in variant lemonade.
+```
+
+### Setters
+
+Members may also be updated by name:
+
+```ruby
+coffee = Drink.coffee(Temperature.hot, Size.small)
+coffee.temperature = Temperature.iced # Oh, sorry, could you make that iced?
+coffee.temperature
+# => #<variant Temperature::Iced>
+```
+
+`#[]=` can also update a member:
+
+```ruby
+lemonade = Drink.lemonade(Size.large)
+lemonade['size'] = Size.small # Oh, a large is 32oz?
+lemonade.size
+# => #<variant Size::Small>
+
+lemonade[:temperature] = Temperature.hot # Sorry, we don't do that here.
+# => NameError: No member 'temperature' in variant lemonade.
+```
+
+### `#attributes`
+
+Get a variant's members as a `Hash`:
+
+```ruby
+Drink.water.attributes
+# => {}
+
+Drink.lemonade(Size.small).attributes
+# => { size: #<variant Size::Small> }
+
+Drink.coffee(Temperataure.iced, Size.large).attributes
+# => { temperature: #<variant Temperature::Iced>, size: #<variant Size::Large> }
+```
+
+### `#to_h`
+
+Return the variant as a `Hash`:
+
+```ruby
+Drink.water.to_h
+# => { water: {} }
+
+Drink.lemonade(Size.small).to_h
+# => { lemonade: { size: #<variant Size::Small> } }
+
+Drink.coffee(Temperataure.iced, Size.large).to_h
+# => { coffee: { temperature: #<variant Temperature::Iced>, size: #<variant Size::Large> } }
+```
+
+Use `include_root: false` to make this method behave like `#attributes`:
+
+```ruby
+Drink.water.to_h(include_root: false)
+# => {}
+
+Drink.lemonade(Size.small).to_h(include_root: false)
+# => { size: #<variant Size::Small> }
+
+Drink.coffee(Temperataure.iced, Size.large).to_h(include_root: false)
+# => { temperature: #<variant Temperature::Iced>, size: #<variant Size::Large> }
+```
+
+### `#members`
+
+Get a variant's members in the order they were in when passed into the initializer:
+
+```ruby
+Drink.water.members
+# => []
+
+Drink.lemonade(Size.small).members
+# => [#<variant Size::Small>]
+
+Drink.coffee(Temperataure.iced, Size.large).members
+# => [#<variant Temperature::Iced>, #<variant Size::Large>]
 ```
 
 ## A Note on Mutability
