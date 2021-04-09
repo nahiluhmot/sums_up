@@ -3,6 +3,7 @@
 Sum types for Ruby with zero runtime dependencies. Inspired by [hojberg/sums-up](https://github.com/hojberg/sums-up).
 
 [![Build Status](https://travis-ci.org/nahiluhmot/sums_up.svg?branch=master)](https://travis-ci.org/nahiluhmot/sums_up)
+[![Gem Version](https://badge.fury.io/rb/sums_up.svg)](https://badge.fury.io/rb/sums_up)
 
 * [What is a Sum Type?](#what-is-a-sum-type)
 * [Quick Start](#quick-start)
