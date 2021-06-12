@@ -2,7 +2,7 @@
 
 Sum types for Ruby with zero runtime dependencies. Inspired by [hojberg/sums-up](https://github.com/hojberg/sums-up).
 
-[![Build Status](https://travis-ci.org/nahiluhmot/sums_up.svg?branch=master)](https://travis-ci.org/nahiluhmot/sums_up)
+[![Build Status](https://travis-ci.org/nahiluhmot/sums_up.svg?branch=main)](https://travis-ci.org/nahiluhmot/sums_up)
 [![Gem Version](https://badge.fury.io/rb/sums_up.svg)](https://badge.fury.io/rb/sums_up)
 
 * [What is a Sum Type?](#what-is-a-sum-type)
@@ -805,7 +805,7 @@ To release a new version, update the version number in `version.rb`, and then ru
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/nahiluhmot/sums_up.
-This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/nahiluhmot/sums_up/blob/master/CODE_OF_CONDUCT.md).
+This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/nahiluhmot/sums_up/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -813,4 +813,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the SumsUp projects codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/nahiluhmot/sums_up/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the SumsUp projects codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/nahiluhmot/sums_up/blob/main/CODE_OF_CONDUCT.md).
