@@ -301,7 +301,7 @@ def drink_size(drink)
   drink.match do |m|
     m.water Size.small
     m.lemonade { |size| size }
-    m.temperature { |size, _temperature| size }
+    m.coffee { |size, _temperature| size }
   end
 end
 
