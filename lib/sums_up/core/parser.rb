@@ -18,7 +18,7 @@ module SumsUp
         no_arg_variants
           .map { |variant| [variant, []] }
           .to_h
-          .merge(arg_variants.transform_values { |ary| [*ary] })
+          .merge(arg_variants.map { |key, ary| [key, [*ary]] }.to_h)
       end
 
       def validate_unique!(variant_names)
@@ -40,7 +40,7 @@ module SumsUp
           raise(VariantNameError, "Expected a Symbol, got: #{variant_name}")
         end
 
-        return if LOWER_SNAKE_CASE_REGEXP.match?(variant_name.to_s)
+        return if LOWER_SNAKE_CASE_REGEXP.match(variant_name.to_s)
 
         raise(
           VariantNameError,
