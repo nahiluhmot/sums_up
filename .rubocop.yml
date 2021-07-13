@@ -21,6 +21,9 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Enabled: false
 
+Style/ExplicitBlockArgument:
+  Enabled: false
+
 # Disabling for now to support Ruby 2.3.
 Style/HashTransformValues:
   Enabled: false

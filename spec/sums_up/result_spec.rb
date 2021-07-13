@@ -54,6 +54,21 @@ RSpec.describe SumsUp::Result do
     end
   end
 
+  describe '#chain' do
+    it 'returns self on failure' do
+      expect(SumsUp::Result.failure(:too_bad).chain(&:anything))
+        .to(eq(SumsUp::Result.failure(:too_bad)))
+    end
+
+    it 'yields the value and returns the result on success' do
+      expect(
+        SumsUp::Result
+          .success(1)
+          .chain { |x| SumsUp::Result.failure("bad value: #{x}") }
+      ).to(eq(SumsUp::Result.failure('bad value: 1')))
+    end
+  end
+
   describe '#map' do
     it 'yields the value and re-wraps the result on success' do
       expect(

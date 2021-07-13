@@ -17,6 +17,15 @@ module SumsUp
       failure(e)
     end
 
+    def chain
+      match do |m|
+        m.success { |value| yield(value) }
+        m.failure self
+      end
+    end
+
+    alias_method(:flat_map, :chain)
+
     # Map a function across the successful value (if present).
     def map
       match do |m|
