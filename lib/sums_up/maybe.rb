@@ -17,6 +17,15 @@ module SumsUp
       end
     end
 
+    def chain
+      match do |m|
+        m.just { |value| yield(value) }
+        m.nothing self
+      end
+    end
+
+    alias_method(:flat_map, :chain)
+
     # Map a function across the Maybe. If present, the value is yielded and that
     # result is wrapped in a new Maybe.just. Returns Maybe.nothing otherwise.
     def map
