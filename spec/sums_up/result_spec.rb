@@ -2,18 +2,45 @@
 
 RSpec.describe SumsUp::Result do
   describe '.from_block' do
-    it 'wraps the error when the block raises' do
-      err = StandardError.new
+    context 'given no arguments' do
+      it 'wraps the error when the block raises' do
+        err = StandardError.new
 
-      expect(SumsUp::Result.from_block { raise(err) })
-        .to(eq(SumsUp::Result.failure(err)))
+        expect(SumsUp::Result.from_block { raise(err) })
+          .to(eq(SumsUp::Result.failure(err)))
+      end
+
+      it 'wraps the result when the block does not raise' do
+        result = double(:result)
+
+        expect(SumsUp::Result.from_block { result })
+          .to(eq(SumsUp::Result.success(result)))
+      end
     end
 
-    it 'wraps the result when the block does not raise' do
-      result = double(:result)
+    context 'given an error class' do
+      let(:error_class) { Class.new(StandardError) }
 
-      expect(SumsUp::Result.from_block { result })
-        .to(eq(SumsUp::Result.success(result)))
+      it 'propagates the error when the block raises a different error' do
+        other_class = Class.new(StandardError)
+
+        expect { SumsUp::Result.from_block(error_class) { raise other_class } }
+          .to(raise_error(other_class))
+      end
+
+      it 'wraps the error when the block raises that error' do
+        error_instance = error_class.new('something went wrong')
+
+        expect(SumsUp::Result.from_block(error_class) { raise(error_instance) })
+          .to(eq(SumsUp::Result.failure(error_instance)))
+      end
+
+      it 'wraps the result when the block does not raise' do
+        result = double(:result)
+
+        expect(SumsUp::Result.from_block { result })
+          .to(eq(SumsUp::Result.success(result)))
+      end
     end
   end
 

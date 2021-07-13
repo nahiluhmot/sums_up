@@ -712,6 +712,12 @@ SumsUp::Result.from_block { raise 'unexpected error' }
 
 SumsUp::Result.from_block { 'good result' }
 # => #<variant SumsUp::Result::Success value="good result">
+
+SumsUp::Result.from_block(ArgumentError) { raise ArgumentError, 'bad argument' }
+# => #<variant SumsUp::Result::Failure error=#<ArgumentError: Bad argument>
+
+SumsUp::Result.from_block(ArgumentError) { raise KeyError, 'no such key' }
+# => KeyError: no such key
 ```
 
 `SumsUp::Result#map` applies a function to the successful values:

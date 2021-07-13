@@ -11,9 +11,9 @@ module SumsUp
   Result = SumsUp.define(failure: :error, success: :value) do
     # Yield, wrapping the result in Result.success, or wrap the raised error
     # in Result.failure.
-    def self.from_block
+    def self.from_block(error_class = StandardError)
       success(yield)
-    rescue StandardError => e
+    rescue error_class => e
       failure(e)
     end
 
