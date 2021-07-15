@@ -2,6 +2,8 @@
 
 ## vX.Y.Z
 
+## v1.2.0
+
 * Define `SumsUp::{Maybe,Result}#{chain,flat_map}`
 * `SumsUp::Result#from_block` now accepts an optional `Class` argument
 
