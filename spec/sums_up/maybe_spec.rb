@@ -23,6 +23,18 @@ RSpec.describe SumsUp::Maybe do
     end
   end
 
+  describe '#chain' do
+    it 'returns nothing when the receiver is nothing' do
+      expect(SumsUp::Maybe.nothing.chain(&:anything))
+        .to(eq(SumsUp::Maybe.nothing))
+    end
+
+    it 'yields the value and returns the result when the receiver is just' do
+      expect(SumsUp::Maybe.just(1).chain { |x| SumsUp::Maybe.just(x * 2) })
+        .to(eq(SumsUp::Maybe.just(2)))
+    end
+  end
+
   describe '#map' do
     it 'returns nothing when the receiver is nothing' do
       expect(SumsUp::Maybe.nothing.map(&:succ))

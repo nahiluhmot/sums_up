@@ -2,7 +2,7 @@
 
 Sum types for Ruby with zero runtime dependencies. Inspired by [hojberg/sums-up](https://github.com/hojberg/sums-up).
 
-[![Build Status](https://travis-ci.org/nahiluhmot/sums_up.svg?branch=main)](https://travis-ci.org/nahiluhmot/sums_up)
+[![Build Status](https://travis-ci.com/nahiluhmot/sums_up.svg?branch=main)](https://travis-ci.com/nahiluhmot/sums_up)
 [![Gem Version](https://badge.fury.io/rb/sums_up.svg)](https://badge.fury.io/rb/sums_up)
 
 * [What is a Sum Type?](#what-is-a-sum-type)
@@ -631,6 +631,23 @@ SumsUp::Maybe.of(false)
 # => #<variant SumsUp::Maybe::Just value=false>
 ```
 
+`SumsUp::Maybe#chain` (and its alias, `#flat_map`) can compose blocks which return `SumsUp::Maybe`s, halting at the first `SumsUp::Maybe.nothing`:
+
+```ruby
+def double_if_odd(n)
+  SumsUp::Maybe
+    .just(n)
+    .chain { |x| x.odd? ? SumsUp::Maybe.just(x) : SumsUp::Maybe.nothing }
+    .chain { |x| SumsUp::Maybe.just(x * 2) }
+end
+
+double_if_odd(3)
+# => #<variant SumsUp::Maybe::Just value=6>
+
+double_if_odd(42)
+# => #<variant SumsUp::Maybe::Nothing>
+```
+
 `SumsUp::Maybe#map` applies a function to the value if it's present:
 
 ```ruby
@@ -712,6 +729,50 @@ SumsUp::Result.from_block { raise 'unexpected error' }
 
 SumsUp::Result.from_block { 'good result' }
 # => #<variant SumsUp::Result::Success value="good result">
+
+SumsUp::Result.from_block(ArgumentError) { raise ArgumentError, 'bad argument' }
+# => #<variant SumsUp::Result::Failure error=#<ArgumentError: Bad argument>
+
+SumsUp::Result.from_block(ArgumentError) { raise KeyError, 'no such key' }
+# => KeyError: no such key
+```
+
+`SumsUp::Result#chain` (and its alias, `#flat_map`) can compose blocks which return `SumsUp::Result`s, halting at the first `SumsUp::Result.failure(...)`:
+
+```ruby
+User = Struct.new(:name, :email)
+
+def parse_user(hash)
+  fetch_key(hash, :name).chain do |name|
+    fetch_key(hash, :email).chain do |email|
+      if URI::MailTo::EMAIL_REGEXP.match?(email)
+        SumsUp::Result.success(User.new(name, email))
+      else
+        SumsUp::Result.failure("invalid email: #{email}")
+      end
+    end
+  end
+end
+
+def fetch_key(hash, key)
+  if hash.key?(key)
+    SumsUp::Result.success(hash[key])
+  else
+    SumsUp::Result.failure("key not found: #{key}")
+  end
+end
+
+parse_user(email: '1337h@ck.er')
+# => #<variant SumsUp::Result::Failure error="key not found: name">
+
+parse_user(name: 'Sam')
+# => #<variant SumsUp::Result::Failure error="key not found: email">
+
+parse_user(name: 'Sam', email: '1337h@ck.er')
+# => #<variant SumsUp::Result::Success value=#<struct User name="Sam", email="1337h@ck.er">>
+
+parse_user(name: 'Sam', email: '1337hacker')
+# => #<variant SumsUp::Result::Failure error="invalid email: 1337hacker">
 ```
 
 `SumsUp::Result#map` applies a function to the successful values:
