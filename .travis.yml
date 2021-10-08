@@ -1,13 +1,30 @@
 ---
 language: ruby
-dist: focal
 cache: bundler
-rvm:
-  - 2.3.0
-  - 2.3.8
-  - 2.4.10
-  - 2.5.8
-  - 2.6.6
-  - 2.7.2
-  - 3.0.2
 before_install: gem install bundler -v '< 3'
+jobs:
+  include:
+    # Ubuntu 18.04 versions
+    - dist: xenial
+      rvm: 2.3.0
+      name: "Ruby 2.3.0"
+    - dist: xenial
+      rvm: 2.3.8
+      name: "Ruby 2.3.8"
+
+    # Ubuntu 20.04 versions
+    - dist: focal
+      rvm: 2.4.10
+      name: "Ruby 2.4.10"
+    - dist: focal
+      rvm: 2.5.9
+      name: "Ruby 2.5.9"
+    - dist: focal
+      rvm: 2.6.8
+      name: "Ruby 2.6.8"
+    - dist: focal
+      rvm: 2.7.4
+      name: "Ruby 2.7.4"
+    - dist: focal
+      rvm: 3.0.2
+      name: "Ruby 3.0.2"
