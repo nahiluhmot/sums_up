@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
+require 'irb'
 require 'sums_up'
-require 'pry'
 
-Pry.start
+IRB.start

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'pry'
 require 'sums_up'
 
 $LOAD_PATH << File.expand_path('support', __dir__)
