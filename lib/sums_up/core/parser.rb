@@ -4,7 +4,7 @@ module SumsUp
   module Core
     # Validates and normalizes arguments passed to SumsUp.define.
     module Parser
-      LOWER_SNAKE_CASE_REGEXP = /\A[[:lower:]]+(_[[:lower:]]+)*\z/.freeze
+      LOWER_SNAKE_CASE_REGEXP = /\A[[:lower:]]+(_[[:lower:]]+)*\z/
 
       module_function
 
@@ -31,7 +31,7 @@ module SumsUp
 
         raise(
           DuplicateNameError,
-          "Duplicated names: #{duplicates.join(', ')}"
+          "Duplicated names: #{duplicates.join(", ")}"
         )
       end
 

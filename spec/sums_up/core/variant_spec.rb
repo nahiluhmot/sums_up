@@ -30,11 +30,11 @@ RSpec.describe SumsUp::Core::Variant do
   let(:two_arg_matcher_class) { double(:two_arg_matcher_class) }
 
   let(:no_arg_variant_instance) { no_arg_variant_class.new }
-  let(:one_arg_variant_instance) { one_arg_variant_class.new('test') }
-  let(:two_arg_variant_instance) { two_arg_variant_class.new('left', 'right') }
+  let(:one_arg_variant_instance) { one_arg_variant_class.new("test") }
+  let(:two_arg_variant_instance) { two_arg_variant_class.new("left", "right") }
 
-  describe '.new' do
-    it 'creates a new instance when provided the correct number of arguments' do
+  describe ".new" do
+    it "creates a new instance when provided the correct number of arguments" do
       expect(no_arg_variant_instance)
         .to(be_a(no_arg_variant_class))
 
@@ -45,20 +45,20 @@ RSpec.describe SumsUp::Core::Variant do
         .to(be_a(two_arg_variant_class))
     end
 
-    it 'raises when provided the wrong number of arguments' do
-      expect { no_arg_variant_class.new('one') }
+    it "raises when provided the wrong number of arguments" do
+      expect { no_arg_variant_class.new("one") }
         .to(
           raise_error(
             ArgumentError,
-            'wrong number of arguments (given 1, expected 0)'
+            "wrong number of arguments (given 1, expected 0)"
           )
         )
 
-      expect { no_arg_variant_class.new('one', 'two') }
+      expect { no_arg_variant_class.new("one", "two") }
         .to(
           raise_error(
             ArgumentError,
-            'wrong number of arguments (given 2, expected 0)'
+            "wrong number of arguments (given 2, expected 0)"
           )
         )
 
@@ -66,15 +66,15 @@ RSpec.describe SumsUp::Core::Variant do
         .to(
           raise_error(
             ArgumentError,
-            'wrong number of arguments (given 0, expected 1)'
+            "wrong number of arguments (given 0, expected 1)"
           )
         )
 
-      expect { one_arg_variant_class.new('one', 'two') }
+      expect { one_arg_variant_class.new("one", "two") }
         .to(
           raise_error(
             ArgumentError,
-            'wrong number of arguments (given 2, expected 1)'
+            "wrong number of arguments (given 2, expected 1)"
           )
         )
 
@@ -82,60 +82,60 @@ RSpec.describe SumsUp::Core::Variant do
         .to(
           raise_error(
             ArgumentError,
-            'wrong number of arguments (given 0, expected 2)'
+            "wrong number of arguments (given 0, expected 2)"
           )
         )
 
-      expect { two_arg_variant_class.new('one') }
+      expect { two_arg_variant_class.new("one") }
         .to(
           raise_error(
             ArgumentError,
-            'wrong number of arguments (given 1, expected 2)'
+            "wrong number of arguments (given 1, expected 2)"
           )
         )
     end
   end
 
-  describe 'generated getters' do
-    it 'fetches the values' do
+  describe "generated getters" do
+    it "fetches the values" do
       expect(one_arg_variant_instance.value)
-        .to(eq('test'))
+        .to(eq("test"))
 
       expect(two_arg_variant_instance.first)
-        .to(eq('left'))
+        .to(eq("left"))
 
       expect(two_arg_variant_instance.second)
-        .to(eq('right'))
+        .to(eq("right"))
     end
   end
 
-  describe 'generated setters' do
-    it 'updates values' do
+  describe "generated setters" do
+    it "updates values" do
       expect { one_arg_variant_instance.value = 42 }
         .to(
           change { one_arg_variant_instance.value }
-            .from('test')
+            .from("test")
             .to(42)
         )
 
       expect { two_arg_variant_instance.first = 42 }
         .to(
           change { two_arg_variant_instance.first }
-            .from('left')
+            .from("left")
             .to(42)
         )
 
       expect { two_arg_variant_instance.second = 42 }
         .to(
           change { two_arg_variant_instance.second }
-            .from('right')
+            .from("right")
             .to(42)
         )
     end
   end
 
-  describe 'generated predicates' do
-    it 'returns true for matching variants' do
+  describe "generated predicates" do
+    it "returns true for matching variants" do
       expect(no_arg_variant_instance)
         .to(be_no_arg_variant)
 
@@ -146,7 +146,7 @@ RSpec.describe SumsUp::Core::Variant do
         .to(be_two_arg_variant)
     end
 
-    it 'returns false for mismatched variants' do
+    it "returns false for mismatched variants" do
       expect(no_arg_variant_instance)
         .to_not(be_one_arg_variant)
 
@@ -167,39 +167,39 @@ RSpec.describe SumsUp::Core::Variant do
     end
   end
 
-  describe '#[]' do
-    it 'raises given an unknown string key' do
-      expect { no_arg_variant_instance['anything'] }
+  describe "#[]" do
+    it "raises given an unknown string key" do
+      expect { no_arg_variant_instance["anything"] }
         .to(
           raise_error(
             NameError,
-            'No member \'anything\' in variant no_arg_variant'
+            "No member 'anything' in variant no_arg_variant"
           )
         )
 
-      expect { one_arg_variant_instance['val'] }
+      expect { one_arg_variant_instance["val"] }
         .to(
           raise_error(
             NameError,
-            'No member \'val\' in variant one_arg_variant'
+            "No member 'val' in variant one_arg_variant"
           )
         )
 
-      expect { one_arg_variant_instance['third'] }
+      expect { one_arg_variant_instance["third"] }
         .to(
           raise_error(
             NameError,
-            'No member \'third\' in variant one_arg_variant'
+            "No member 'third' in variant one_arg_variant"
           )
         )
     end
 
-    it 'raises given an unknown symbol key' do
+    it "raises given an unknown symbol key" do
       expect { no_arg_variant_instance[:anything] }
         .to(
           raise_error(
             NameError,
-            'No member \'anything\' in variant no_arg_variant'
+            "No member 'anything' in variant no_arg_variant"
           )
         )
 
@@ -207,7 +207,7 @@ RSpec.describe SumsUp::Core::Variant do
         .to(
           raise_error(
             NameError,
-            'No member \'val\' in variant one_arg_variant'
+            "No member 'val' in variant one_arg_variant"
           )
         )
 
@@ -215,67 +215,67 @@ RSpec.describe SumsUp::Core::Variant do
         .to(
           raise_error(
             NameError,
-            'No member \'third\' in variant one_arg_variant'
+            "No member 'third' in variant one_arg_variant"
           )
         )
     end
 
-    it 'returns the value given a known string key' do
-      expect(one_arg_variant_instance['value'])
-        .to(eq('test'))
+    it "returns the value given a known string key" do
+      expect(one_arg_variant_instance["value"])
+        .to(eq("test"))
 
-      expect(two_arg_variant_instance['first'])
-        .to(eq('left'))
+      expect(two_arg_variant_instance["first"])
+        .to(eq("left"))
 
-      expect(two_arg_variant_instance['second'])
-        .to(eq('right'))
+      expect(two_arg_variant_instance["second"])
+        .to(eq("right"))
     end
 
-    it 'returns the value given a known symbol key' do
+    it "returns the value given a known symbol key" do
       expect(one_arg_variant_instance[:value])
-        .to(eq('test'))
+        .to(eq("test"))
 
       expect(two_arg_variant_instance[:first])
-        .to(eq('left'))
+        .to(eq("left"))
 
       expect(two_arg_variant_instance[:second])
-        .to(eq('right'))
+        .to(eq("right"))
     end
   end
 
-  describe '#[]=' do
-    it 'raises given an unknown string key' do
-      expect { no_arg_variant_instance['anything'] = nil }
+  describe "#[]=" do
+    it "raises given an unknown string key" do
+      expect { no_arg_variant_instance["anything"] = nil }
         .to(
           raise_error(
             NameError,
-            'No member \'anything\' in variant no_arg_variant'
+            "No member 'anything' in variant no_arg_variant"
           )
         )
 
-      expect { one_arg_variant_instance['val'] = nil }
+      expect { one_arg_variant_instance["val"] = nil }
         .to(
           raise_error(
             NameError,
-            'No member \'val\' in variant one_arg_variant'
+            "No member 'val' in variant one_arg_variant"
           )
         )
 
-      expect { one_arg_variant_instance['third'] = nil }
+      expect { one_arg_variant_instance["third"] = nil }
         .to(
           raise_error(
             NameError,
-            'No member \'third\' in variant one_arg_variant'
+            "No member 'third' in variant one_arg_variant"
           )
         )
     end
 
-    it 'raises given an unknown symbol key' do
+    it "raises given an unknown symbol key" do
       expect { no_arg_variant_instance[:anything] = nil }
         .to(
           raise_error(
             NameError,
-            'No member \'anything\' in variant no_arg_variant'
+            "No member 'anything' in variant no_arg_variant"
           )
         )
 
@@ -283,7 +283,7 @@ RSpec.describe SumsUp::Core::Variant do
         .to(
           raise_error(
             NameError,
-            'No member \'val\' in variant one_arg_variant'
+            "No member 'val' in variant one_arg_variant"
           )
         )
 
@@ -291,59 +291,59 @@ RSpec.describe SumsUp::Core::Variant do
         .to(
           raise_error(
             NameError,
-            'No member \'third\' in variant one_arg_variant'
+            "No member 'third' in variant one_arg_variant"
           )
         )
     end
 
-    it 'updates the value given a known string key' do
-      expect { one_arg_variant_instance['value'] = 42 }
+    it "updates the value given a known string key" do
+      expect { one_arg_variant_instance["value"] = 42 }
         .to(
           change { one_arg_variant_instance.value }
-            .from('test')
+            .from("test")
             .to(42)
         )
 
-      expect { two_arg_variant_instance['first'] = 42 }
+      expect { two_arg_variant_instance["first"] = 42 }
         .to(
           change { two_arg_variant_instance.first }
-            .from('left')
+            .from("left")
             .to(42)
         )
 
-      expect { two_arg_variant_instance['second'] = 42 }
+      expect { two_arg_variant_instance["second"] = 42 }
         .to(
           change { two_arg_variant_instance.second }
-            .from('right')
+            .from("right")
             .to(42)
         )
     end
 
-    it 'returns the value given a known symbol key' do
+    it "returns the value given a known symbol key" do
       expect { one_arg_variant_instance[:value] = 42 }
         .to(
           change { one_arg_variant_instance.value }
-            .from('test')
+            .from("test")
             .to(42)
         )
 
       expect { two_arg_variant_instance[:first] = 42 }
         .to(
           change { two_arg_variant_instance.first }
-            .from('left')
+            .from("left")
             .to(42)
         )
 
       expect { two_arg_variant_instance[:second] = 42 }
         .to(
           change { two_arg_variant_instance.second }
-            .from('right')
+            .from("right")
             .to(42)
         )
     end
   end
 
-  describe '#match' do
+  describe "#match" do
     let(:no_arg_matcher_instance) { double(:no_arg_matcher_instance) }
     let(:one_arg_matcher_instance) { double(:one_arg_matcher_instance) }
     let(:two_arg_matcher_instance) { double(:two_arg_matcher_instance) }
@@ -367,21 +367,21 @@ RSpec.describe SumsUp::Core::Variant do
       allow(no_arg_matcher_instance)
         .to(receive(:_fetch_result))
         .with(no_args)
-        .and_return('no arg variant match result')
+        .and_return("no arg variant match result")
 
       allow(one_arg_matcher_instance)
         .to(receive(:_fetch_result))
         .with(no_args)
-        .and_return('one arg variant match result')
+        .and_return("one arg variant match result")
 
       allow(two_arg_matcher_instance)
         .to(receive(:_fetch_result))
         .with(no_args)
-        .and_return('two arg variant match result')
+        .and_return("two arg variant match result")
     end
 
-    context 'given a block' do
-      it 'creates a matcher, yields it, then fetches the result' do
+    context "given a block" do
+      it "creates a matcher, yields it, then fetches the result" do
         no_arg_result = no_arg_variant_instance.match do |matcher|
           expect(matcher)
             .to(eq(no_arg_matcher_instance))
@@ -398,18 +398,18 @@ RSpec.describe SumsUp::Core::Variant do
         end
 
         expect(no_arg_result)
-          .to(eq('no arg variant match result'))
+          .to(eq("no arg variant match result"))
 
         expect(one_arg_result)
-          .to(eq('one arg variant match result'))
+          .to(eq("one arg variant match result"))
 
         expect(two_arg_result)
-          .to(eq('two arg variant match result'))
+          .to(eq("two arg variant match result"))
       end
     end
 
-    context 'given no block' do
-      it 'creates a matcher, matches the kwargs, and fetches the result' do
+    context "given no block" do
+      it "creates a matcher, matches the kwargs, and fetches the result" do
         expect(no_arg_matcher_instance)
           .to(receive(:_match_hash))
           .with({})
@@ -423,19 +423,19 @@ RSpec.describe SumsUp::Core::Variant do
           .with(hash_including(left: 1, right: 2))
 
         expect(no_arg_variant_instance.match(**{}))
-          .to(eq('no arg variant match result'))
+          .to(eq("no arg variant match result"))
 
         expect(one_arg_variant_instance.match(one_arg: true))
-          .to(eq('one arg variant match result'))
+          .to(eq("one arg variant match result"))
 
         expect(two_arg_variant_instance.match(left: 1, right: 2))
-          .to(eq('two arg variant match result'))
+          .to(eq("two arg variant match result"))
       end
     end
   end
 
-  describe '#members' do
-    it 'returns the an Array of the attributes' do
+  describe "#members" do
+    it "returns the an Array of the attributes" do
       expect(no_arg_variant_instance.members)
         .to(eq([]))
 
@@ -447,47 +447,47 @@ RSpec.describe SumsUp::Core::Variant do
     end
   end
 
-  describe '#attributes' do
-    it 'returns the a Hash of the attributes' do
+  describe "#attributes" do
+    it "returns the a Hash of the attributes" do
       expect(no_arg_variant_instance.attributes)
         .to(eq({}))
 
       expect(one_arg_variant_instance.attributes)
-        .to(eq(value: 'test'))
+        .to(eq(value: "test"))
 
       expect(two_arg_variant_instance.attributes)
-        .to(eq(first: 'left', second: 'right'))
+        .to(eq(first: "left", second: "right"))
     end
   end
 
-  describe '#to_h' do
-    it 'returns the variant and a Hash of the attributes by default' do
+  describe "#to_h" do
+    it "returns the variant and a Hash of the attributes by default" do
       expect(no_arg_variant_instance.to_h)
         .to(eq(no_arg_variant: {}))
 
       expect(one_arg_variant_instance.to_h)
-        .to(eq(one_arg_variant: { value: 'test' }))
+        .to(eq(one_arg_variant: {value: "test"}))
 
       expect(two_arg_variant_instance.to_h)
-        .to(eq(two_arg_variant: { first: 'left', second: 'right' }))
+        .to(eq(two_arg_variant: {first: "left", second: "right"}))
     end
 
-    it 'returns the a Hash of the attributes with include_root: false' do
+    it "returns the a Hash of the attributes with include_root: false" do
       expect(no_arg_variant_instance.to_h(include_root: false))
         .to(eq({}))
 
       expect(one_arg_variant_instance.to_h(include_root: false))
-        .to(eq(value: 'test'))
+        .to(eq(value: "test"))
 
       expect(two_arg_variant_instance.to_h(include_root: false))
-        .to(eq(first: 'left', second: 'right'))
+        .to(eq(first: "left", second: "right"))
     end
   end
 
-  describe '#to_s' do
-    it 'returns a String representation of the variant' do
+  describe "#to_s" do
+    it "returns a String representation of the variant" do
       expect(no_arg_variant_instance.to_s)
-        .to(eq('#<variant no_arg_variant>'))
+        .to(eq("#<variant no_arg_variant>"))
 
       expect(one_arg_variant_instance.to_s)
         .to(eq('#<variant one_arg_variant value="test">'))
@@ -497,8 +497,8 @@ RSpec.describe SumsUp::Core::Variant do
     end
   end
 
-  describe '#==' do
-    it 'returns false when the values are not equal' do
+  describe "#==" do
+    it "returns false when the values are not equal" do
       expect(no_arg_variant_instance)
         .to_not(eq(one_arg_variant_instance))
 
@@ -533,7 +533,7 @@ RSpec.describe SumsUp::Core::Variant do
         )
     end
 
-    it 'returns true given the same object' do
+    it "returns true given the same object" do
       expect(no_arg_variant_instance)
         .to(eq(no_arg_variant_instance))
 
@@ -544,7 +544,7 @@ RSpec.describe SumsUp::Core::Variant do
         .to(eq(two_arg_variant_instance))
     end
 
-    it 'returns true when the values are equal' do
+    it "returns true when the values are equal" do
       expect(no_arg_variant_instance)
         .to(eq(no_arg_variant_class.new))
 

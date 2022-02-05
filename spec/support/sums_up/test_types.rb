@@ -12,7 +12,7 @@ module SumsUp
     Either = SumsUp.define(left: :value, right: :value) do
       def self.from_block
         right(yield)
-      rescue StandardError => e
+      rescue => e
         left(e)
       end
 

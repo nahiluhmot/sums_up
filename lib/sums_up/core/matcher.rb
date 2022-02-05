@@ -64,8 +64,8 @@ module SumsUp
         if unknown_variants.any?
           raise(
             UnknownVariantError,
-            "Unknown variant(s): #{unknown_variants.join(', ')}; " \
-            "valid variant(s) are: #{variants.join(', ')}"
+            "Unknown variant(s): #{unknown_variants.join(", ")}; " \
+            "valid variant(s) are: #{variants.join(", ")}"
           )
         end
 
@@ -82,7 +82,7 @@ module SumsUp
         return @result if @wildcard_matched
         return @result if @matched_variants.length == variants.length
 
-        unmatched_variants = (variants - @matched_variants).join(', ')
+        unmatched_variants = (variants - @matched_variants).join(", ")
 
         raise(
           UnmatchedVariantError,
