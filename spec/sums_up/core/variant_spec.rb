@@ -416,11 +416,11 @@ RSpec.describe SumsUp::Core::Variant do
 
         expect(one_arg_matcher_instance)
           .to(receive(:_match_hash))
-          .with(one_arg: true)
+          .with(hash_including(one_arg: true))
 
         expect(two_arg_matcher_instance)
           .to(receive(:_match_hash))
-          .with(left: 1, right: 2)
+          .with(hash_including(left: 1, right: 2))
 
         expect(no_arg_variant_instance.match(**{}))
           .to(eq('no arg variant match result'))
