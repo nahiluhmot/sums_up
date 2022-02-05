@@ -85,7 +85,7 @@ module SumsUp
         end
       end
 
-      alias to_a members
+      alias_method :to_a, :members
 
       def attributes
         self.class::MEMBERS.zip(@values).to_h
@@ -93,7 +93,7 @@ module SumsUp
 
       def to_h(include_root: true)
         if include_root
-          { self.class::VARIANT => attributes }
+          {self.class::VARIANT => attributes}
         else
           attributes
         end
@@ -107,7 +107,7 @@ module SumsUp
         attrs = self.class::MEMBERS
           .zip(@values)
           .map { |member, value| "#{member}=#{value.inspect}" }
-          .join(', ')
+          .join(", ")
 
         if attrs.empty?
           "#<variant #{variant}>"
@@ -116,7 +116,7 @@ module SumsUp
         end
       end
 
-      alias to_s inspect
+      alias_method :to_s, :inspect
 
       def ==(other)
         other.is_a?(self.class) &&

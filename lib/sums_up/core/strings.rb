@@ -8,7 +8,7 @@ module SumsUp
 
       def snake_to_class(snake_case_name)
         snake_case_name
-          .split('_')
+          .split("_")
           .map(&:capitalize)
           .join
       end

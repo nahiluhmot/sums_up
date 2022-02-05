@@ -43,8 +43,8 @@ RSpec.describe SumsUp::Core::SumType do
     end
   end
 
-  describe 'no-arg variant consturctors' do
-    it 'returns the same object every time unless overridden' do
+  describe "no-arg variant consturctors" do
+    it "returns the same object every time unless overridden" do
       nothing_instance = subject.nothing
       duped_instance = subject.nothing(memo: false)
 
@@ -75,8 +75,8 @@ RSpec.describe SumsUp::Core::SumType do
     end
   end
 
-  describe 'arg variant constructors' do
-    it 'builds a new instance for each call' do
+  describe "arg variant constructors" do
+    it "builds a new instance for each call" do
       just_instance = subject.just(1)
 
       expect(just_instance)
@@ -93,8 +93,8 @@ RSpec.describe SumsUp::Core::SumType do
     end
   end
 
-  describe 'generated constants' do
-    it 'sets constants for each class name' do
+  describe "generated constants" do
+    it "sets constants for each class name" do
       expect(subject::Nothing)
         .to(eq(nothing_variant_class))
 
@@ -103,8 +103,8 @@ RSpec.describe SumsUp::Core::SumType do
     end
   end
 
-  describe 'class methods' do
-    it 'can define custom class methods' do
+  describe "class methods" do
+    it "can define custom class methods" do
       expect(subject)
         .to(respond_to(:of))
 
@@ -116,10 +116,10 @@ RSpec.describe SumsUp::Core::SumType do
     end
   end
 
-  describe 'instance methods' do
-    it 'can define custom class methods' do
+  describe "instance methods" do
+    it "can define custom class methods" do
       nothing_instance = subject.nothing
-      just_instance = subject.just('str')
+      just_instance = subject.just("str")
 
       expect(nothing_instance)
         .to(respond_to(:or_else))
@@ -127,11 +127,11 @@ RSpec.describe SumsUp::Core::SumType do
       expect(just_instance)
         .to(respond_to(:or_else))
 
-      expect(nothing_instance.or_else('other'))
-        .to(eq('other'))
+      expect(nothing_instance.or_else("other"))
+        .to(eq("other"))
 
-      expect(just_instance.or_else('other'))
-        .to(eq('str'))
+      expect(just_instance.or_else("other"))
+        .to(eq("str"))
     end
   end
 end

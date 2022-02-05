@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
-require 'sums_up/core'
-require 'sums_up/version'
+require "sums_up/core"
+require "sums_up/version"
 
 # UI-level functions for the gem.
 module SumsUp
@@ -27,5 +27,5 @@ module SumsUp
   end
 end
 
-require 'sums_up/maybe'
-require 'sums_up/result'
+require "sums_up/maybe"
+require "sums_up/result"

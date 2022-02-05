@@ -4,27 +4,22 @@ cache: bundler
 before_install: gem install bundler -v '< 3'
 jobs:
   include:
-    # Ubuntu 18.04 versions
-    - dist: xenial
-      rvm: 2.3.0
-      name: "Ruby 2.3.0"
-    - dist: xenial
-      rvm: 2.3.8
-      name: "Ruby 2.3.8"
-
     # Ubuntu 20.04 versions
     - dist: focal
-      rvm: 2.4.10
-      name: "Ruby 2.4.10"
+      rvm: 2.5.0
+      name: "Ruby 2.5.0"
     - dist: focal
       rvm: 2.5.9
       name: "Ruby 2.5.9"
     - dist: focal
-      rvm: 2.6.8
-      name: "Ruby 2.6.8"
+      rvm: 2.6.9
+      name: "Ruby 2.6.9"
     - dist: focal
-      rvm: 2.7.4
-      name: "Ruby 2.7.4"
+      rvm: 2.7.5
+      name: "Ruby 2.7.5"
     - dist: focal
-      rvm: 3.0.2
-      name: "Ruby 3.0.2"
+      rvm: 3.0.3
+      name: "Ruby 3.0.3"
+    - dist: focal
+      rvm: 3.1.0
+      name: "Ruby 3.1.0"
