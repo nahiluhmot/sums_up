@@ -4,16 +4,6 @@ cache: bundler
 before_install: gem install bundler -v '< 3'
 jobs:
   include:
-    # Ubuntu 20.04 versions
-    - dist: focal
-      rvm: 2.5.0
-      name: "Ruby 2.5.0"
-    - dist: focal
-      rvm: 2.5.9
-      name: "Ruby 2.5.9"
-    - dist: focal
-      rvm: 2.6.9
-      name: "Ruby 2.6.9"
     - dist: focal
       rvm: 2.7.5
       name: "Ruby 2.7.5"
