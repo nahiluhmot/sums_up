@@ -4,15 +4,15 @@ cache: bundler
 before_install: gem install bundler -v '< 3'
 jobs:
   include:
-    - dist: jammy
+    - dist: focal
       rvm: 2.7.7
       name: "Ruby 2.7.7"
-    - dist: jammy
+    - dist: focal
       rvm: 3.0.5
       name: "Ruby 3.0.5"
-    - dist: jammy
+    - dist: focal
       rvm: 3.1.3
       name: "Ruby 3.1.3"
-    - dist: jammy
+    - dist: focal
       rvm: 3.2.0
       name: "Ruby 3.2.0"
