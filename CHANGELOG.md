@@ -2,6 +2,14 @@
 
 ## vX.Y.Z
 
+## v1.2.2
+
+* Support Ruby 2.7-3.2
+
+## v1.2.1
+
+* Support Ruby 2.5-3.1
+
 ## v1.2.0
 
 * Define `SumsUp::{Maybe,Result}#{chain,flat_map}`
