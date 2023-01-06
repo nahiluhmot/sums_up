@@ -5,6 +5,9 @@ before_install: gem install bundler -v '< 3'
 jobs:
   include:
     - dist: focal
+      rvm: 2.7.0
+      name: "Ruby 2.7.0"
+    - dist: focal
       rvm: 2.7.7
       name: "Ruby 2.7.7"
     - dist: focal
