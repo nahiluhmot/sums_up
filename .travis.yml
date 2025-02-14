@@ -19,3 +19,9 @@ jobs:
     - dist: focal
       rvm: 3.2.0
       name: "Ruby 3.2.0"
+    - dist: focal
+      rvm: 3.3.5
+      name: "Ruby 3.3.5"
+    - dist: focal
+      rvm: 3.4.1
+      name: "Ruby 3.4.1"
